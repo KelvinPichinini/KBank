@@ -1,10 +1,8 @@
 package com.kelbank.domain.user;
 
+import com.kelbank.dtos.UserDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -12,7 +10,7 @@ import java.math.BigDecimal;
 @Table(name="users")
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class User {
     @Id
@@ -32,4 +30,13 @@ public class User {
 
     private String password;
     private BigDecimal balance;
+
+    public User(UserDTO user){
+        this.firstName = user.firstName();
+        this.lastName = user.lastName();
+        this.document = user.document();
+        this.email = user.email();
+        this.password = user.password();
+        this.balance = new BigDecimal(0);
+    }
 }
