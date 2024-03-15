@@ -1,17 +1,22 @@
 package com.kelbank.services;
 
 import com.kelbank.domain.user.User;
+import com.kelbank.dtos.UserDTO;
 import com.kelbank.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository userRepository;
+
 
     public void validateTransaction(User sender, BigDecimal amount) throws Exception {
         if(sender.getBalance().compareTo(amount) < 0){
@@ -20,10 +25,41 @@ public class UserService {
     }
 
     public User findUserById(Long id) throws Exception {
-        return this.repository.findUserById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
+        return this.userRepository.findUserById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
     }
 
-    public void createUser(User user){
-        this.repository.save(user);
+    public void saveUser(User user){
+        this.userRepository.save(user);
     }
+
+    public void deleteUser(Long id) throws Exception {
+        User user = findUserById(id);
+        this.userRepository.delete(user);
+    }
+
+    public User changeEmail (String newEmail, Long id) throws Exception{
+        User user = findUserById(id);
+        user.setEmail(newEmail);
+        saveUser(user);
+        return user;
+    }
+
+    public User createUser(UserDTO user){
+        User newUser = new User(user);
+        this.userRepository.save(newUser);
+        return newUser;
+
+    }
+
+    public List<User> getAllUsers(){
+        return this.userRepository.findAll();
+    }
+    public User addFunds(Long id, BigDecimal amount) throws Exception {
+        User user = findUserById(id);
+        BigDecimal oldBalance = user.getBalance();
+        user.setBalance(oldBalance.add(amount));
+        saveUser(user);
+        return user;
+    }
+
 }
