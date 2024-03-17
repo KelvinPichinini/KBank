@@ -1,0 +1,43 @@
+package com.kelbank.domain.user;
+
+import com.kelbank.dtos.UserDTO;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+@Entity(name="users")
+@Table(name="users")
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique=true)
+    private Long id;
+
+    private String firstName;
+
+    private String lastName;
+
+    @Column(unique=true)
+    private String document;
+
+    @Column(unique=true)
+    private String email;
+
+    private String password;
+    private BigDecimal balance;
+
+    public User(UserDTO user){
+        this.firstName = user.firstName();
+        this.lastName = user.lastName();
+        this.document = user.document();
+        this.email = user.email();
+        this.password = user.password();
+        this.balance = new BigDecimal(0);
+    }
+}
