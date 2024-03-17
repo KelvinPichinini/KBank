@@ -4,5 +4,5 @@ import com.kelbank.domain.cashin.CashInMethods;
 
 import java.math.BigDecimal;
 
-public record CashInDTO (Long receiverId, BigDecimal amount, CashInMethods method) {
+public record CashInDTO (BigDecimal amount, CashInMethods method) {
 }

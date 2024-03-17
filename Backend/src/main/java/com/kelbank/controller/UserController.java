@@ -5,13 +5,13 @@ import com.kelbank.dtos.UserDTO;
 import com.kelbank.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.UUID;
 
 @RestController()
 public class UserController {
@@ -34,27 +34,31 @@ public class UserController {
         return new ResponseEntity<>(allUsers,HttpStatus.OK);
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<User> changeEmail(@RequestBody Map<String, String> body, @PathVariable Long id) throws Exception {
-            String email = body.get("email");
-            if (email == null){
+    @PutMapping("/users")
+    public ResponseEntity<User> changeLastName(@RequestBody Map<String, String> body, Authentication authentication) throws Exception {
+            String lastName = body.get("lastName");
+            String id = ((User) authentication.getPrincipal()).getId();
+            if (lastName == null){
                 throw new MissingResourceException("Requisição incorreta","Controller", "0");
             }
-        User user = userService.changeEmail(email,id);
+        User user = userService.changeLastName(lastName,id);
             return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/users/cash-in/{id}")
-    public ResponseEntity<User> addFunds(@RequestBody Map<String, String> body, @PathVariable Long id) throws Exception {
+    @PutMapping("/users/cash-in")
+    public ResponseEntity<User> addFunds(@RequestBody Map<String, String> body, Authentication authentication) throws Exception {
         BigDecimal sumAmount = new BigDecimal(body.get("amount"));
+        String id = ((User) authentication.getPrincipal()).getId();
         User user = userService.addFunds(id, sumAmount);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<String> deleteAccount(@PathVariable Long id) throws Exception {
-        userService.deleteUser(id);
-        return new ResponseEntity<>("Usuário deletado com sucesso", HttpStatus.OK);
-
+    @GetMapping("/users/balance")
+    public ResponseEntity<BigDecimal> getAllUsers(Authentication authentication){
+        BigDecimal userBalance = ((User) authentication.getPrincipal()).getBalance();
+        return new ResponseEntity<>(userBalance,HttpStatus.OK);
     }
+
+
+
 }

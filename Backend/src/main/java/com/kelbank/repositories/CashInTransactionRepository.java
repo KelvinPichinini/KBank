@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CashInTransactionRepository extends JpaRepository<CashInTransaction, Long> {
-    List<CashInTransaction> findByReceiverId(Long receiverId);
+public interface CashInTransactionRepository extends JpaRepository<CashInTransaction, String> {
+    List<CashInTransaction> findByReceiverId(String receiverId);
 }

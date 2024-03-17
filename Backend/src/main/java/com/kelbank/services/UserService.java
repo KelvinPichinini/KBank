@@ -5,6 +5,7 @@ import com.kelbank.dtos.UserDTO;
 import com.kelbank.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,7 +26,7 @@ public class UserService {
         }
     }
 
-    public User findUserById(Long id) throws Exception {
+    public User findUserById(String id) throws Exception {
         return this.userRepository.findUserById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
     }
 
@@ -41,20 +42,18 @@ public class UserService {
         this.userRepository.save(user);
     }
 
-    public void deleteUser(Long id) throws Exception {
-        User user = findUserById(id);
-        this.userRepository.delete(user);
-    }
 
-    public User changeEmail (String newEmail, Long id) throws Exception{
+    public User changeLastName (String lastName, String id) throws Exception{
         User user = findUserById(id);
-        user.setEmail(newEmail);
+        user.setLastName(lastName);
         saveUser(user);
         return user;
     }
 
     public User createUser(UserDTO user){
+        String encryptedPass = new BCryptPasswordEncoder().encode(user.password());
         User newUser = new User(user);
+        newUser.setPassword(encryptedPass);
         this.userRepository.save(newUser);
         return newUser;
 
@@ -63,7 +62,7 @@ public class UserService {
     public List<User> getAllUsers(){
         return this.userRepository.findAll();
     }
-    public User addFunds(Long id, BigDecimal amount) throws Exception {
+    public User addFunds(String id, BigDecimal amount) throws Exception {
         User user = findUserById(id);
         BigDecimal oldBalance = user.getBalance();
         user.setBalance(oldBalance.add(amount));

@@ -32,9 +32,9 @@ public class TransactionService {
 
 
 
-    public Transaction createTransaction(TransactionDTO transaction) throws Exception {
+    public Transaction createTransaction(TransactionDTO transaction, String senderId) throws Exception {
 
-        User sender =  userService.findUserById(transaction.senderId());
+        User sender =  userService.findUserById(senderId);
         User receiver = userService.findUserByEmail(transaction.receiverEmail());
         BigDecimal amount = transaction.amount();
 
@@ -58,8 +58,12 @@ public class TransactionService {
 
     }
 
-    public List<Transaction> getAllTransactionsById(Long id){
-        return this.repository.findAllById(id);
+    public List<Transaction> getSentTransactions(String id){
+        return this.repository.findBySenderId(id);
+    }
+
+    public List<Transaction> getReceivedTransactions(String id){
+        return this.repository.findByReceiverId(id);
     }
 
 

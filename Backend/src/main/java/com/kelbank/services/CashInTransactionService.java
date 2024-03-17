@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -45,9 +46,9 @@ public class CashInTransactionService {
         return false;
     }
 
-    public CashInTransaction createCashInTransaction(CashInDTO cashIn) throws Exception {
+    public CashInTransaction createCashInTransaction(String id, CashInDTO cashIn) throws Exception {
 
-        User receiver = userService.findUserById(cashIn.receiverId());
+        User receiver = userService.findUserById(id);
         BigDecimal amount = cashIn.amount();
 
         if(!checkTransaction()){
@@ -65,7 +66,29 @@ public class CashInTransactionService {
         return authorizedCashIn;
     }
 
-    public List<CashInTransaction> getAllCashInByid(Long id){
+    public List<CashInTransaction> getAllCashInByid(String id){
         return this.repository.findByReceiverId(id);
+    }
+
+    public void deleteCashIn(String userId,String id) throws Exception {
+        Optional<CashInTransaction> cashInTransaction = this.repository.findById(id);
+        if(cashInTransaction.isEmpty()){
+            throw new Exception("CashIn não encontrado");
+        }else{
+            User user = this.userService.findUserById(userId);
+            BigDecimal userBalance = user.getBalance();
+            BigDecimal cashInAmount = cashInTransaction.get().getAmount();
+            if(userBalance.compareTo(cashInAmount) >= 0){
+                user.setBalance(userBalance.subtract(cashInAmount));
+                userService.saveUser(user);
+                repository.delete(cashInTransaction.get());
+            }
+            else{
+                throw new Exception("Impossivel reverter CashIn, saldo insuficiente");
+            }
+        }
+
+
+
     }
 }

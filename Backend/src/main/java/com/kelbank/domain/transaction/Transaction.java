@@ -16,8 +16,8 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "id")
 public class Transaction {
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue( strategy = GenerationType.UUID)
+    private String id;
     private BigDecimal amount;
 
     @ManyToOne

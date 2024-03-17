@@ -1,13 +1,12 @@
 package com.kelbank.controller;
 
 import com.kelbank.domain.cashin.CashInTransaction;
-import com.kelbank.domain.transaction.Transaction;
+import com.kelbank.domain.user.User;
 import com.kelbank.dtos.CashInDTO;
-import com.kelbank.dtos.TransactionDTO;
 import com.kelbank.services.CashInTransactionService;
-import com.kelbank.services.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,12 +22,21 @@ public class CashInTransactionController {
     }
 
     @PostMapping("/cashIn")
-    public ResponseEntity<CashInTransaction> createTransaction(@RequestBody CashInDTO transaction) throws Exception {
-        return new ResponseEntity<>(cashInService.createCashInTransaction(transaction), HttpStatus.OK);
+    public ResponseEntity<CashInTransaction> createTransaction(@RequestBody CashInDTO transaction, Authentication authentication) throws Exception {
+        String id = ((User) authentication.getPrincipal()).getId();
+        return new ResponseEntity<>(cashInService.createCashInTransaction(id,transaction), HttpStatus.OK);
     }
 
-    @GetMapping("/cashIn/{id}")
-    public ResponseEntity<List<CashInTransaction>> getAllTransactionsById(@PathVariable Long id){
+    @GetMapping("/cashIn")
+    public ResponseEntity<List<CashInTransaction>> getAllTransactionsById(Authentication authentication){
+        String id = ((User) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(cashInService.getAllCashInByid(id), HttpStatus.OK);
+    }
+    @DeleteMapping("/cashIn/{cashInId}")
+    public ResponseEntity<String> deleteCashIn(Authentication authentication,@PathVariable String cashInId) throws Exception {
+        String userId = ((User) authentication.getPrincipal()).getId();
+        cashInService.deleteCashIn(userId,cashInId);
+        return new ResponseEntity<>("Transação deletada com sucesso", HttpStatus.OK);
+
     }
 }

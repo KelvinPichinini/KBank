@@ -4,5 +4,5 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
-public record TransactionDTO(Long senderId, BigDecimal amount, String receiverEmail) {
+public record TransactionDTO(BigDecimal amount, String receiverEmail) {
 }
