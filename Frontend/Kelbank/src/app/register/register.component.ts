@@ -27,12 +27,12 @@ export class RegisterComponent {
   })
 
   onSubmit(): void {
-    this.http.post<{user: UserInterface}>('http://localhost:8080/users',
+    this.http.post<UserInterface>('http://localhost:8080/users',
     this.form.getRawValue(),
   
     
     ).subscribe(response => {
-      console.log('response', response)
+      console.log(response.email)
       this.router.navigateByUrl('/login')
     })
   }

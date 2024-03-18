@@ -1,10 +1,13 @@
 <app-header></app-header>
-<div>
+<div *ngIf="authService.currentTokenSig() === null">
     <a routerLink="/login">Login</a>
     <a routerLink="/register">Register</a>
 </div>
-<div>
-    <span (click)="logout()">Logout</span>
+<div *ngIf="authService.currentTokenSig()">
+    <div>Bem vindo(a)</div>
+    <div>
+        <span (click)="logout()">Logout</span>
+    </div>
 </div>
 
 <router-outlet></router-outlet>

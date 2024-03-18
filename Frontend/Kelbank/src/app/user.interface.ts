@@ -1,5 +1,19 @@
 export interface UserInterface {
-    email: string;
-    token: string;
-    username: string;
+    id: string,
+    firstName: string,
+    lastName: string,
+    document: string,
+    email: string,
+    password: string,
+    balance: number,
+    enabled: boolean,
+    credentialsNonExpired: boolean,
+    accountNonExpired: boolean,
+    authorities: [
+        {
+            authority: string
+        }
+    ],
+    username: string,
+    accountNonLocked: boolean
 }

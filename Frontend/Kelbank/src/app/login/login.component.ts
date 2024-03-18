@@ -1,8 +1,8 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserInterface } from '../user.interface';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +12,7 @@ import { UserInterface } from '../user.interface';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+  authService = inject(AuthService)
   loginObj : Login;
 
   constructor(private http: HttpClient, private router: Router){
@@ -19,10 +20,11 @@ export class LoginComponent {
   }
 
   onLogin() {
+
     this.http.post('http://localhost:8080/auth/login',this.loginObj).subscribe((res:any)=>{
       if(res.token) {
         localStorage.setItem('userToken',res.token)
-        alert("Logged in successfully");
+        this.authService.currentTokenSig.set(res.token)
         this.router.navigateByUrl('/dashboard')
       } else {
         alert("Usuário ou senha incorretos")
