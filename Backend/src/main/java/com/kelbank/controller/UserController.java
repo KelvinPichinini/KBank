@@ -22,18 +22,19 @@ public class UserController {
         this.userService = userService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody UserDTO user){
         User newUser = userService.createUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> allUsers = userService.getAllUsers();
         return new ResponseEntity<>(allUsers,HttpStatus.OK);
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping("/users")
     public ResponseEntity<User> changeLastName(@RequestBody Map<String, String> body, Authentication authentication) throws Exception {
             String lastName = body.get("lastName");
@@ -44,7 +45,7 @@ public class UserController {
         User user = userService.changeLastName(lastName,id);
             return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping("/users/cash-in")
     public ResponseEntity<User> addFunds(@RequestBody Map<String, String> body, Authentication authentication) throws Exception {
         BigDecimal sumAmount = new BigDecimal(body.get("amount"));
@@ -53,6 +54,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/users/balance")
     public ResponseEntity<BigDecimal> getAllUsers(Authentication authentication){
         BigDecimal userBalance = ((User) authentication.getPrincipal()).getBalance();

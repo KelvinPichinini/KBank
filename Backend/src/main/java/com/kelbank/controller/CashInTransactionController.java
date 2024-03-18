@@ -20,18 +20,19 @@ public class CashInTransactionController {
     public CashInTransactionController(CashInTransactionService cashInService) {
         this.cashInService = cashInService;
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/cashIn")
     public ResponseEntity<CashInTransaction> createTransaction(@RequestBody CashInDTO transaction, Authentication authentication) throws Exception {
         String id = ((User) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(cashInService.createCashInTransaction(id,transaction), HttpStatus.OK);
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/cashIn")
     public ResponseEntity<List<CashInTransaction>> getAllTransactionsById(Authentication authentication){
         String id = ((User) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(cashInService.getAllCashInByid(id), HttpStatus.OK);
     }
+    @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping("/cashIn/{cashInId}")
     public ResponseEntity<String> deleteCashIn(Authentication authentication,@PathVariable String cashInId) throws Exception {
         String userId = ((User) authentication.getPrincipal()).getId();

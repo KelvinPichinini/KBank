@@ -6,6 +6,7 @@ import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -41,5 +42,10 @@ public class ControllerExceptionHandler {
         return ResponseEntity.badRequest().body(exceptionDTO.message());
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity handleAuth(AuthenticationException exception){
+        ExceptionDTO exceptionDTO = new ExceptionDTO("Usuario ou senha incorretos");
+        return ResponseEntity.badRequest().body(exceptionDTO.message());
+    }
 
 }

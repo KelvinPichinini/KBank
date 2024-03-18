@@ -19,19 +19,19 @@ public class TransactionController {
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/transaction")
     public ResponseEntity<Transaction> createTransaction(@RequestBody TransactionDTO transaction, Authentication authentication) throws Exception {
         String id = ((User) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(transactionService.createTransaction(transaction, id), HttpStatus.OK);
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/transaction/sent")
     public ResponseEntity<List<Transaction>> getSentTransactionsById(Authentication authentication){
         String id = ((User) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(transactionService.getSentTransactions(id), HttpStatus.OK);
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/transaction/received")
     public ResponseEntity<List<Transaction>> getReceivedTransactionsById(Authentication authentication){
         String id = ((User) authentication.getPrincipal()).getId();
