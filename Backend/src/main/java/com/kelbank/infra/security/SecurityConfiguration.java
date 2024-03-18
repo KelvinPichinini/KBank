@@ -21,11 +21,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
     @Autowired SecurityFilter securityFilter;
 
+    private static final String[] SWAGGER_WHITELIST = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/swagger-resources",
+            "/v2/api-docs/**"
+    };
+
     @Bean
     public WebSecurityCustomizer ignoringCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(HttpMethod.POST,"/users" )
-                .requestMatchers(HttpMethod.POST,"/auth/login" );
+                .requestMatchers(HttpMethod.POST,"/auth/login" )
+
+                .requestMatchers(SWAGGER_WHITELIST);
     }
 
     @Bean

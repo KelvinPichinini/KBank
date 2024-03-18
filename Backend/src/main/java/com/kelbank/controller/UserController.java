@@ -1,6 +1,7 @@
 package com.kelbank.controller;
 
 import com.kelbank.domain.user.User;
+import com.kelbank.dtos.EditUserDTO;
 import com.kelbank.dtos.UserDTO;
 import com.kelbank.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -35,9 +36,9 @@ public class UserController {
         return new ResponseEntity<>(allUsers,HttpStatus.OK);
     }
     @CrossOrigin(origins = "http://localhost:4200")
-    @PutMapping("/users")
-    public ResponseEntity<User> changeLastName(@RequestBody Map<String, String> body, Authentication authentication) throws Exception {
-            String lastName = body.get("lastName");
+    @PutMapping("/users/lastName")
+    public ResponseEntity<User> changeLastName(@RequestBody EditUserDTO userNewData, Authentication authentication) throws Exception {
+            String lastName = userNewData.lastName();
             String id = ((User) authentication.getPrincipal()).getId();
             if (lastName == null){
                 throw new MissingResourceException("Requisição incorreta","Controller", "0");
@@ -45,18 +46,10 @@ public class UserController {
         User user = userService.changeLastName(lastName,id);
             return new ResponseEntity<>(user, HttpStatus.OK);
     }
-    @CrossOrigin(origins = "http://localhost:4200")
-    @PutMapping("/users/cash-in")
-    public ResponseEntity<User> addFunds(@RequestBody Map<String, String> body, Authentication authentication) throws Exception {
-        BigDecimal sumAmount = new BigDecimal(body.get("amount"));
-        String id = ((User) authentication.getPrincipal()).getId();
-        User user = userService.addFunds(id, sumAmount);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/users/balance")
-    public ResponseEntity<BigDecimal> getAllUsers(Authentication authentication){
+    public ResponseEntity<BigDecimal> getUserBalance(Authentication authentication){
         BigDecimal userBalance = ((User) authentication.getPrincipal()).getBalance();
         return new ResponseEntity<>(userBalance,HttpStatus.OK);
     }
