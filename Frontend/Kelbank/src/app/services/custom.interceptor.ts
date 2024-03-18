@@ -7,6 +7,5 @@ export const customInterceptor: HttpInterceptorFn = (req, next) => {
       Authorization: `Bearer ${token}`
     }
   })
-  console.log(cloneReq)
   return next(cloneReq);
 };

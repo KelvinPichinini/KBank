@@ -1,1 +1,15 @@
-<p>dashboard works!</p>
+<div>
+    Saldo da conta: 
+    {{ balance}}
+</div>
+<div>
+    <h4>Nova transação </h4>
+    <form action="#">
+        <input type="email" [(ngModel)]="sendTransfer.receiverEmail" name="receiverEmail" placeholder="Email destinatário" required>
+        <input type="valor" [(ngModel)]="sendTransfer.amount" name="sendAmount" placeholder="Valor a enviar" required>
+        <button type="button" class="btn" (click)="onSendTransfer()">Enviar</button>
+    </form>
+</div>
+<div>
+
+</div>
